@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>APPPFZTQEQSER</title>
+    <meta
+      name="description"
+      content="Um app para o Pepi escrever, guardar e organizar tudo que pensa."
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="app-header">
+        <div>
+          <p class="eyebrow">Cofre de pensamentos</p>
+          <h1>APPPFZTQEQSER</h1>
+        </div>
+
+        <div class="stats" aria-label="Resumo dos pensamentos">
+          <div class="stat">
+            <strong id="thoughtCount">0</strong>
+            <span>pensamentos</span>
+          </div>
+          <div class="stat">
+            <strong id="favoriteCount">0</strong>
+            <span>favoritos</span>
+          </div>
+          <div class="stat">
+            <strong id="moodCount">0</strong>
+            <span>humores</span>
+          </div>
+        </div>
+      </header>
+
+      <section class="workspace">
+        <aside class="sidebar">
+          <section class="panel">
+            <h2>Novo pensamento</h2>
+            <label>
+              <span>Titulo</span>
+              <input id="newTitle" type="text" placeholder="Titulo" />
+            </label>
+            <label>
+              <span>Texto</span>
+              <textarea
+                id="newBody"
+                rows="6"
+                placeholder="Escreve aqui tudo que voce esta pensando..."
+              ></textarea>
+            </label>
+            <div class="two-columns">
+              <label>
+                <span>Sentimento</span>
+                <select id="newMood"></select>
+              </label>
+              <label>
+                <span>Tag</span>
+                <input id="newTag" type="text" placeholder="tag" />
+              </label>
+            </div>
+            <button id="saveThought" class="primary-button">Guardar pensamento</button>
+          </section>
+
+          <section class="panel list-panel">
+            <label>
+              <span>Buscar</span>
+              <input id="searchThoughts" type="search" placeholder="Buscar" />
+            </label>
+            <label>
+              <span>Filtrar</span>
+              <select id="moodFilter"></select>
+            </label>
+            <div id="thoughtList" class="thought-list"></div>
+          </section>
+        </aside>
+
+        <section class="editor" aria-label="Editor de pensamento">
+          <div class="editor-actions">
+            <div class="button-row">
+              <button id="favoriteThought" class="secondary-button">Favoritar</button>
+              <button id="deleteThought" class="danger-button">Apagar</button>
+            </div>
+            <p id="updatedAt">Atualizado agora</p>
+          </div>
+
+          <input id="editorTitle" class="editor-title" aria-label="Editar titulo" />
+          <div class="two-columns">
+            <label>
+              <span>Sentimento</span>
+              <select id="editorMood"></select>
+            </label>
+            <label>
+              <span>Tag</span>
+              <input id="editorTag" type="text" />
+            </label>
+          </div>
+          <textarea id="editorBody" class="editor-body" aria-label="Editar pensamento"></textarea>
+        </section>
+      </section>
+    </main>
+
+    <script src="./script.js"></script>
+  </body>
+</html>
