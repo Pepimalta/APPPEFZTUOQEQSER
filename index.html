@@ -11,95 +11,182 @@
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
-    <main class="app-shell">
-      <header class="app-header">
-        <div>
-          <p class="eyebrow">Cofre de pensamentos</p>
-          <h1>APPPFZTQEQSER</h1>
+    <div class="page-frame">
+      <nav class="topbar" aria-label="Topo do app">
+        <div class="brand">
+          <div class="brand-mark">&#129504;</div>
+          <strong>APPPFZTQEQSER</strong>
         </div>
 
-        <div class="stats" aria-label="Resumo dos pensamentos">
-          <div class="stat">
-            <strong id="thoughtCount">0</strong>
-            <span>pensamentos</span>
-          </div>
-          <div class="stat">
-            <strong id="favoriteCount">0</strong>
-            <span>favoritos</span>
-          </div>
-          <div class="stat">
-            <strong id="moodCount">0</strong>
-            <span>humores</span>
-          </div>
+        <div class="top-actions">
+          <span class="hello">Ola, Pepi. Bora despejar a mente?</span>
+          <span id="thoughtCount" class="thought-badge">0 pensamentos</span>
         </div>
-      </header>
+      </nav>
 
-      <section class="workspace">
-        <aside class="sidebar">
-          <section class="panel">
-            <h2>Novo pensamento</h2>
-            <label>
-              <span>Titulo</span>
-              <input id="newTitle" type="text" placeholder="Titulo" />
-            </label>
-            <label>
-              <span>Texto</span>
-              <textarea
-                id="newBody"
-                rows="6"
-                placeholder="Escreve aqui tudo que voce esta pensando..."
-              ></textarea>
-            </label>
-            <div class="two-columns">
-              <label>
-                <span>Sentimento</span>
-                <select id="newMood"></select>
-              </label>
-              <label>
-                <span>Tag</span>
-                <input id="newTag" type="text" placeholder="tag" />
-              </label>
+      <main class="app-shell">
+        <div id="saveToast" class="save-toast" role="status" aria-live="polite">
+          Pensamento guardado.
+        </div>
+
+        <section id="homeView" class="home-view">
+          <section class="hero">
+            <div class="hero-copy">
+              <p class="eyebrow">Arquivo secreto do Pepi</p>
+              <h1>APPPFZTQEQSER</h1>
+              <p>Escolhe uma sala da sua cabeca. Cada modulo abre uma pagina propria para guardar aquele tipo de pensamento.</p>
             </div>
-            <button id="saveThought" class="primary-button">Guardar pensamento</button>
+            <div class="tool-row" aria-label="Atalhos principais">
+              <button data-module="jornal" type="button">&#127881; Jornal</button>
+              <button data-module="loucuras" type="button">&#129504; Loucuras</button>
+              <button data-module="felicidade" type="button">&#9728; Felicidade</button>
+            </div>
           </section>
 
-          <section class="panel list-panel">
-            <label>
-              <span>Buscar</span>
-              <input id="searchThoughts" type="search" placeholder="Buscar" />
-            </label>
-            <label>
-              <span>Filtrar</span>
-              <select id="moodFilter"></select>
-            </label>
-            <div id="thoughtList" class="thought-list"></div>
+          <section class="menu-grid" aria-label="Areas do app">
+            <button class="feature-card active" data-module="jornal" type="button">
+              <span class="feature-icon">&#127881;</span>
+              <span>
+                <strong>Jornal</strong>
+                <small>Registre o que aconteceu, o que voce viu e o que merece virar noticia.</small>
+              </span>
+            </button>
+            <button class="feature-card" data-module="loucuras" type="button">
+              <span class="feature-icon">&#129504;</span>
+              <span>
+                <strong>Pensamentos loucos e idiotas</strong>
+                <small>Ideias sem filtro, teorias tortas e frases que nasceram gritando.</small>
+              </span>
+            </button>
+            <button class="feature-card" data-module="coisas" type="button">
+              <span class="feature-icon">&#128188;</span>
+              <span>
+                <strong>Coisas</strong>
+                <small>Listas, achados, planos, links, lembretes e baguncinhas uteis.</small>
+              </span>
+            </button>
+            <button class="feature-card" data-module="putisse" type="button">
+              <span class="feature-icon">&#128139;</span>
+              <span>
+                <strong>Diario de putisse</strong>
+                <small>O lugar das opinioes afiadas, dramas, venenos e verdades sinceras.</small>
+              </span>
+            </button>
+            <button class="feature-card happiness-card" data-module="felicidade" type="button">
+              <span class="feature-icon">&#9728;</span>
+              <span>
+                <strong>Felicidade</strong>
+                <small>Guarde coisas boas para revisitar quando o mundo estiver meio torto.</small>
+              </span>
+            </button>
           </section>
-        </aside>
-
-        <section class="editor" aria-label="Editor de pensamento">
-          <div class="editor-actions">
-            <div class="button-row">
-              <button id="favoriteThought" class="secondary-button">Favoritar</button>
-              <button id="deleteThought" class="danger-button">Apagar</button>
-            </div>
-            <p id="updatedAt">Atualizado agora</p>
-          </div>
-
-          <input id="editorTitle" class="editor-title" aria-label="Editar titulo" />
-          <div class="two-columns">
-            <label>
-              <span>Sentimento</span>
-              <select id="editorMood"></select>
-            </label>
-            <label>
-              <span>Tag</span>
-              <input id="editorTag" type="text" />
-            </label>
-          </div>
-          <textarea id="editorBody" class="editor-body" aria-label="Editar pensamento"></textarea>
         </section>
-      </section>
-    </main>
+
+        <section id="moduleView" class="module-view hidden">
+          <section class="module-page">
+            <button id="backHome" class="back-button" type="button">Voltar</button>
+            <div class="module-emoji" id="moduleEmoji">&#127881;</div>
+            <div>
+              <p class="eyebrow">Pagina do modulo</p>
+              <h2 id="moduleTitle">Jornal</h2>
+              <p id="moduleDescription">
+                Registre o que aconteceu, o que voce viu e o que merece virar noticia.
+              </p>
+            </div>
+          </section>
+
+          <section class="workspace">
+            <aside class="sidebar">
+              <section class="panel panel-new">
+                <div class="panel-title">
+                  <span class="feature-icon">&#9999;</span>
+                  <h2>Guardar no arquivo</h2>
+                </div>
+                <label>
+                  <span>Titulo</span>
+                  <input id="newTitle" type="text" placeholder="Titulo" />
+                </label>
+                <label>
+                  <span>Texto</span>
+                  <textarea
+                    id="newBody"
+                    rows="6"
+                    placeholder="Escreve aqui tudo que voce esta pensando..."
+                  ></textarea>
+                </label>
+                <div class="two-columns">
+                  <label>
+                    <span>Modulo</span>
+                    <select id="newModule"></select>
+                  </label>
+                  <label>
+                    <span>Sentimento</span>
+                    <select id="newMood"></select>
+                  </label>
+                </div>
+                <div class="two-columns">
+                  <label>
+                    <span>Tag</span>
+                    <input id="newTag" type="text" placeholder="tag" />
+                  </label>
+                  <label>
+                    <span>Pagina atual</span>
+                    <input id="currentModuleName" type="text" readonly />
+                  </label>
+                </div>
+                <button id="saveThought" class="primary-button">Guardar pensamento</button>
+              </section>
+
+              <section class="panel list-panel">
+                <div class="panel-title">
+                  <span class="feature-icon">&#128218;</span>
+                  <h2>Coisas guardadas</h2>
+                </div>
+                <div class="two-columns filters">
+                  <label>
+                    <span>Buscar</span>
+                    <input id="searchThoughts" type="search" placeholder="Buscar" />
+                  </label>
+                  <label>
+                    <span>Filtrar</span>
+                    <select id="moodFilter"></select>
+                  </label>
+                </div>
+                <div id="moduleSummary" class="module-summary"></div>
+                <div id="thoughtList" class="thought-list"></div>
+              </section>
+            </aside>
+
+            <section class="editor" aria-label="Editor de pensamento">
+              <div class="editor-actions">
+                <div class="button-row">
+                  <button id="favoriteThought" class="secondary-button">Favoritar</button>
+                  <button id="deleteThought" class="danger-button">Apagar</button>
+                </div>
+                <div class="mini-stats">
+                  <span id="favoriteCount">0 favoritos</span>
+                  <span id="moodCount">0 humores</span>
+                  <span id="updatedAt">Atualizado agora</span>
+                </div>
+              </div>
+
+              <input id="editorTitle" class="editor-title" aria-label="Editar titulo" />
+              <div class="two-columns">
+                <label>
+                  <span>Sentimento</span>
+                  <select id="editorMood"></select>
+                </label>
+                <label>
+                  <span>Tag</span>
+                  <input id="editorTag" type="text" />
+                </label>
+              </div>
+              <textarea id="editorBody" class="editor-body" aria-label="Editar pensamento"></textarea>
+            </section>
+          </section>
+        </section>
+      </main>
+    </div>
 
     <script src="./script.js"></script>
   </body>
