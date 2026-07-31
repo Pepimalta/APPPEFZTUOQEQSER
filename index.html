@@ -1,34 +1,851 @@
-const STORAGE_KEY = "pepi-thoughts-v1";
-const moods = ["curioso", "feliz", "calmo", "ideia", "confuso", "importante"];
-const modules = {
-  jornal: {
-    name: "Jornal",
-    emoji: "🎉",
-    emoji: "\uD83C\uDF89",
-    description: "Registre o que aconteceu, o que voce viu e o que merece virar noticia.",
-  },
-  loucuras: {
-    name: "Pensamentos loucos e idiotas",
-    emoji: "🧠",
-    emoji: "\uD83E\uDDE0",
-    description: "Ideias sem filtro, teorias tortas e frases que nasceram gritando.",
-  },
-  coisas: {
-    name: "Coisas",
-    emoji: "💼",
-    emoji: "\uD83D\uDCBC",
-    description: "Listas, achados, planos, links, lembretes e baguncinhas uteis.",
-  },
-  putisse: {
-    name: "Diario de putisse",
-    emoji: "💋",
-    emoji: "\uD83D\uDC8B",
-    description: "O lugar das opinioes afiadas, dramas, venenos e verdades sinceras.",
-  },
-  felicidade: {
-    name: "Felicidade",
-    emoji: "☀",
-    emoji: "\u2600",
-    description: "Guarde coisas boas para revisitar quando o mundo estiver meio torto.",
-  },
-};
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>APPPFZTQEQSER</title>
+
+  <style>
+    :root {
+      --bg: #fffaf6;
+      --ink: #242336;
+      --muted: #68657d;
+      --card: rgba(255,255,255,.86);
+      --line: rgba(36,35,54,.14);
+      --purple: #5e44ff;
+      --blue: #1598d8;
+      --pink: #f25f95;
+      --green: #25b38e;
+      --yellow: #e3a936;
+      --red: #e34b5d;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Arial, sans-serif;
+      color: var(--ink);
+      background:
+        linear-gradient(90deg, rgba(36,35,54,.045) 1px, transparent 1px),
+        linear-gradient(0deg, rgba(36,35,54,.035) 1px, transparent 1px),
+        radial-gradient(circle at 15% 15%, rgba(255,220,117,.38), transparent 20rem),
+        radial-gradient(circle at 85% 15%, rgba(21,152,216,.2), transparent 22rem),
+        radial-gradient(circle at 75% 90%, rgba(242,95,149,.18), transparent 22rem),
+        var(--bg);
+      background-size: 34px 34px, 34px 34px, auto, auto, auto, auto;
+    }
+
+    button, input, textarea, select { font: inherit; }
+    button { cursor: pointer; }
+    button:disabled { opacity: .45; cursor: not-allowed; }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 18px;
+      padding: 18px 38px;
+      background: rgba(255,255,255,.72);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(16px);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      font-size: 1.45rem;
+      font-weight: 950;
+    }
+
+    .logo {
+      width: 54px;
+      height: 54px;
+      display: grid;
+      place-items: center;
+      border-radius: 18px;
+      background: #242336;
+      font-size: 1.8rem;
+    }
+
+    .top-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--muted);
+      font-weight: 800;
+    }
+
+    .badge {
+      padding: 12px 16px;
+      border-radius: 999px;
+      background: white;
+      border: 1px solid var(--line);
+      color: var(--ink);
+      font-weight: 950;
+    }
+
+    main {
+      width: min(1320px, calc(100% - 40px));
+      margin: 0 auto;
+      padding: 34px 0 60px;
+    }
+
+    .hidden { display: none !important; }
+
+    .hero, .card, .panel, .module-head, .editor {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 26px;
+      box-shadow: 0 18px 40px rgba(55,66,118,.1);
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      justify-content: space-between;
+      gap: 24px;
+      padding: 38px;
+      min-height: 250px;
+    }
+
+    .hero:before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 12px;
+      background: linear-gradient(var(--pink), var(--yellow), var(--green), var(--blue));
+    }
+
+    .eyebrow {
+      margin: 0 0 10px;
+      color: var(--purple);
+      font-size: .8rem;
+      text-transform: uppercase;
+      letter-spacing: .16em;
+      font-weight: 950;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2.7rem, 7vw, 5.7rem);
+      line-height: .95;
+    }
+
+    .hero p:not(.eyebrow), .module-head p, .card small {
+      color: var(--muted);
+      line-height: 1.45;
+      font-weight: 700;
+    }
+
+    .quick {
+      display: grid;
+      gap: 12px;
+      min-width: 180px;
+      align-self: center;
+    }
+
+    .quick button, .back, .primary, .soft, .danger {
+      border: 0;
+      border-radius: 999px;
+      padding: 13px 18px;
+      font-weight: 950;
+    }
+
+    .quick button, .soft, .back {
+      background: white;
+      color: var(--ink);
+      border: 1px solid var(--line);
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 16px;
+      margin-top: 22px;
+    }
+
+    .card {
+      position: relative;
+      grid-column: span 2;
+      min-height: 170px;
+      padding: 20px;
+      text-align: left;
+    }
+
+    .card:nth-child(4), .card:nth-child(5) { grid-column: span 3; }
+
+    .card.active { outline: 3px solid rgba(94,68,255,.18); }
+
+    .icon {
+      width: 58px;
+      height: 58px;
+      display: grid;
+      place-items: center;
+      border-radius: 18px;
+      background: #e4f8ef;
+      font-size: 1.8rem;
+      margin-bottom: 14px;
+    }
+
+    .card strong {
+      display: block;
+      font-size: 1.35rem;
+      margin-bottom: 8px;
+    }
+
+    .module-view {
+      display: grid;
+      gap: 20px;
+    }
+
+    .module-head {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      min-height: 180px;
+      padding: 24px;
+    }
+
+    .module-head h2 {
+      margin: 0;
+      font-size: 2rem;
+    }
+
+    .back {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+    }
+
+    .workspace {
+      display: grid;
+      grid-template-columns: 410px 1fr;
+      gap: 20px;
+    }
+
+    .side {
+      display: grid;
+      gap: 18px;
+      align-content: start;
+    }
+
+    .panel, .editor { padding: 20px; }
+
+    .panel-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .panel-title h2 { margin: 0; }
+
+    label {
+      display: grid;
+      gap: 7px;
+      margin-bottom: 12px;
+      color: var(--muted);
+      font-weight: 900;
+      font-size: .84rem;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      border: 1px solid rgba(36,35,54,.18);
+      border-radius: 16px;
+      background: rgba(255,255,255,.9);
+      padding: 14px;
+      outline: none;
+      color: var(--ink);
+    }
+
+    input:focus, textarea:focus, select:focus {
+      border-color: var(--purple);
+      box-shadow: 0 0 0 4px rgba(94,68,255,.12);
+    }
+
+    .two {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .primary {
+      width: 100%;
+      background: linear-gradient(135deg, var(--purple), var(--blue));
+      color: white;
+      border-radius: 16px;
+    }
+
+    .danger {
+      background: #ffe9ee;
+      color: var(--red);
+      border-radius: 16px;
+    }
+
+    .soft { border-radius: 16px; color: var(--purple); }
+
+    .summary, .empty {
+      border: 1px dashed rgba(94,68,255,.25);
+      border-radius: 16px;
+      padding: 14px;
+      color: var(--purple);
+      font-weight: 950;
+      margin-bottom: 12px;
+      background: rgba(255,255,255,.62);
+    }
+
+    .list {
+      display: grid;
+      gap: 10px;
+      max-height: 430px;
+      overflow: auto;
+    }
+
+    .item {
+      display: grid;
+      gap: 7px;
+      min-height: 108px;
+      border: 1px solid rgba(36,35,54,.14);
+      border-radius: 18px;
+      background: white;
+      padding: 15px;
+      text-align: left;
+    }
+
+    .item.active {
+      border-color: rgba(94,68,255,.45);
+      background: #f7f4ff;
+    }
+
+    .item-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      font-weight: 950;
+    }
+
+    .preview { color: var(--muted); }
+
+    .meta {
+      color: var(--purple);
+      font-size: .76rem;
+      font-weight: 950;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+    }
+
+    .editor {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      min-height: 620px;
+    }
+
+    .editor-actions {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 16px;
+    }
+
+    .editor-title {
+      border-color: transparent;
+      font-size: clamp(2rem, 4vw, 4.2rem);
+      font-weight: 950;
+      padding-left: 0;
+    }
+
+    .editor-body {
+      flex: 1;
+      min-height: 340px;
+      line-height: 1.7;
+    }
+
+    .toast {
+      position: fixed;
+      right: 26px;
+      bottom: 26px;
+      z-index: 10;
+      opacity: 0;
+      transform: translateY(12px);
+      transition: .18s;
+      pointer-events: none;
+      background: #f0fff8;
+      color: #176b58;
+      border: 1px solid rgba(37,179,142,.28);
+      border-radius: 18px;
+      padding: 14px 18px;
+      font-weight: 950;
+      box-shadow: 0 18px 38px rgba(37,179,142,.16);
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 1000px) {
+      .topbar, .top-info, .hero, .editor-actions {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .cards, .workspace {
+        grid-template-columns: 1fr;
+      }
+
+      .card, .card:nth-child(4), .card:nth-child(5) {
+        grid-column: auto;
+      }
+    }
+
+    @media (max-width: 620px) {
+      .topbar { padding: 16px; }
+      main { width: min(100% - 24px, 680px); }
+      .hero, .card, .panel, .module-head, .editor { border-radius: 20px; padding: 18px; }
+      .two { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="topbar">
+    <div class="brand">
+      <div class="logo">&#129504;</div>
+      <span>APPPFZTQEQSER</span>
+    </div>
+    <div class="top-info">
+      <span>Ola, Pepi. Bora despejar a mente?</span>
+      <span id="totalCount" class="badge">0 pensamentos</span>
+    </div>
+  </div>
+
+  <main>
+    <div id="toast" class="toast">Pensamento guardado.</div>
+
+    <section id="homeView">
+      <section class="hero">
+        <div>
+          <p class="eyebrow">Arquivo secreto do Pepi</p>
+          <h1>APPPFZTQEQSER</h1>
+          <p>Escolhe uma sala da sua cabeca. Cada modulo abre uma pagina propria para guardar aquele tipo de pensamento.</p>
+        </div>
+        <div class="quick">
+          <button data-open="jornal">&#127881; Jornal</button>
+          <button data-open="loucuras">&#129504; Loucuras</button>
+          <button data-open="felicidade">&#9728; Felicidade</button>
+        </div>
+      </section>
+
+      <section class="cards">
+        <button class="card" data-open="jornal">
+          <span class="icon">&#127881;</span>
+          <strong>Jornal</strong>
+          <small>O que aconteceu, o que voce viu e o que merece virar noticia.</small>
+        </button>
+
+        <button class="card" data-open="loucuras">
+          <span class="icon">&#129504;</span>
+          <strong>Pensamentos loucos e idiotas</strong>
+          <small>Ideias sem filtro, teorias tortas e frases que nasceram gritando.</small>
+        </button>
+
+        <button class="card" data-open="coisas">
+          <span class="icon">&#128188;</span>
+          <strong>Coisas</strong>
+          <small>Listas, achados, planos, links, lembretes e baguncinhas uteis.</small>
+        </button>
+
+        <button class="card" data-open="putisse">
+          <span class="icon">&#128139;</span>
+          <strong>Diario de putisse</strong>
+          <small>Opinioes afiadas, dramas, venenos e verdades sinceras.</small>
+        </button>
+
+        <button class="card" data-open="felicidade">
+          <span class="icon">&#9728;</span>
+          <strong>Felicidade</strong>
+          <small>Coisas boas para revisitar quando o mundo estiver meio torto.</small>
+        </button>
+      </section>
+    </section>
+
+    <section id="moduleView" class="module-view hidden">
+      <section class="module-head">
+        <button id="backHome" class="back">Voltar</button>
+        <div id="moduleEmoji" class="icon">&#127881;</div>
+        <div>
+          <p class="eyebrow">Pagina do modulo</p>
+          <h2 id="moduleTitle">Jornal</h2>
+          <p id="moduleDescription"></p>
+        </div>
+      </section>
+
+      <section class="workspace">
+        <aside class="side">
+          <section class="panel">
+            <div class="panel-title">
+              <span class="icon">&#9999;</span>
+              <h2>Guardar no arquivo</h2>
+            </div>
+
+            <label>Titulo
+              <input id="newTitle" placeholder="Titulo">
+            </label>
+
+            <label>Texto
+              <textarea id="newBody" rows="6" placeholder="Escreve aqui tudo que voce esta pensando..."></textarea>
+            </label>
+
+            <div class="two">
+              <label>Modulo
+                <select id="newModule"></select>
+              </label>
+
+              <label>Sentimento
+                <select id="newMood"></select>
+              </label>
+            </div>
+
+            <label>Tag
+              <input id="newTag" placeholder="tag">
+            </label>
+
+            <button id="saveBtn" class="primary">Guardar pensamento</button>
+          </section>
+
+          <section class="panel">
+            <div class="panel-title">
+              <span class="icon">&#128218;</span>
+              <h2>Coisas guardadas</h2>
+            </div>
+
+            <div class="two">
+              <label>Buscar
+                <input id="searchInput" placeholder="Buscar">
+              </label>
+
+              <label>Filtrar
+                <select id="moodFilter"></select>
+              </label>
+            </div>
+
+            <div id="summary" class="summary"></div>
+            <div id="list" class="list"></div>
+          </section>
+        </aside>
+
+        <section class="editor">
+          <div class="editor-actions">
+            <div>
+              <button id="favoriteBtn" class="soft">Favoritar</button>
+              <button id="deleteBtn" class="danger">Apagar</button>
+            </div>
+            <span id="updatedAt">Pagina vazia</span>
+          </div>
+
+          <input id="editTitle" class="editor-title" placeholder="Nenhum pensamento nessa pagina ainda">
+
+          <div class="two">
+            <label>Sentimento
+              <select id="editMood"></select>
+            </label>
+
+            <label>Tag
+              <input id="editTag">
+            </label>
+          </div>
+
+          <textarea id="editBody" class="editor-body" placeholder="Guarda um pensamento neste modulo para ele aparecer aqui."></textarea>
+        </section>
+      </section>
+    </section>
+  </main>
+
+  <script>
+    const STORAGE_KEY = "pepi-thoughts-final";
+
+    const modules = {
+      jornal: {
+        name: "Jornal",
+        emoji: "🎉",
+        description: "O que aconteceu, o que voce viu e o que merece virar noticia."
+      },
+      loucuras: {
+        name: "Pensamentos loucos e idiotas",
+        emoji: "🧠",
+        description: "Ideias sem filtro, teorias tortas e frases que nasceram gritando."
+      },
+      coisas: {
+        name: "Coisas",
+        emoji: "💼",
+        description: "Listas, achados, planos, links, lembretes e baguncinhas uteis."
+      },
+      putisse: {
+        name: "Diario de putisse",
+        emoji: "💋",
+        description: "Opinioes afiadas, dramas, venenos e verdades sinceras."
+      },
+      felicidade: {
+        name: "Felicidade",
+        emoji: "☀",
+        description: "Coisas boas para revisitar quando o mundo estiver meio torto."
+      }
+    };
+
+    const moods = ["todos", "curioso", "feliz", "calmo", "ideia", "confuso", "importante"];
+
+    let thoughts = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+    let activeModule = "jornal";
+    let activeId = "";
+
+    const $ = (id) => document.getElementById(id);
+
+    const els = {
+      home: $("homeView"),
+      module: $("moduleView"),
+      total: $("totalCount"),
+      toast: $("toast"),
+      back: $("backHome"),
+      moduleEmoji: $("moduleEmoji"),
+      moduleTitle: $("moduleTitle"),
+      moduleDescription: $("moduleDescription"),
+      newTitle: $("newTitle"),
+      newBody: $("newBody"),
+      newModule: $("newModule"),
+      newMood: $("newMood"),
+      newTag: $("newTag"),
+      save: $("saveBtn"),
+      search: $("searchInput"),
+      moodFilter: $("moodFilter"),
+      summary: $("summary"),
+      list: $("list"),
+      favorite: $("favoriteBtn"),
+      delete: $("deleteBtn"),
+      updatedAt: $("updatedAt"),
+      editTitle: $("editTitle"),
+      editMood: $("editMood"),
+      editTag: $("editTag"),
+      editBody: $("editBody")
+    };
+
+    function fillSelect(select, options) {
+      select.innerHTML = options.map((item) => `<option value="${item}">${item}</option>`).join("");
+    }
+
+    fillSelect(els.newMood, moods.filter(m => m !== "todos"));
+    fillSelect(els.editMood, moods.filter(m => m !== "todos"));
+    fillSelect(els.moodFilter, moods);
+    els.moodFilter.value = "todos";
+    els.newModule.innerHTML = Object.entries(modules)
+      .map(([key, mod]) => `<option value="${key}">${mod.name}</option>`)
+      .join("");
+
+    document.querySelectorAll("[data-open]").forEach((btn) => {
+      btn.addEventListener("click", () => openModule(btn.dataset.open));
+    });
+
+    els.back.addEventListener("click", () => {
+      els.module.classList.add("hidden");
+      els.home.classList.remove("hidden");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+
+    els.save.addEventListener("click", saveThought);
+    els.search.addEventListener("input", render);
+    els.moodFilter.addEventListener("change", render);
+    els.favorite.addEventListener("click", toggleFavorite);
+    els.delete.addEventListener("click", deleteThought);
+
+    els.editTitle.addEventListener("input", () => updateActive("title", els.editTitle.value));
+    els.editMood.addEventListener("change", () => updateActive("mood", els.editMood.value));
+    els.editTag.addEventListener("input", () => updateActive("tag", els.editTag.value));
+    els.editBody.addEventListener("input", () => updateActive("body", els.editBody.value));
+    els.newModule.addEventListener("change", () => openModule(els.newModule.value));
+
+    function openModule(moduleKey) {
+      activeModule = moduleKey;
+      els.home.classList.add("hidden");
+      els.module.classList.remove("hidden");
+
+      const first = thoughts.find(t => t.module === activeModule);
+      activeId = first ? first.id : "";
+
+      render();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function saveThought() {
+      const body = els.newBody.value.trim();
+      if (!body) return;
+
+      const now = new Date().toISOString();
+      const thought = {
+        id: crypto.randomUUID(),
+        module: activeModule,
+        title: els.newTitle.value.trim() || body.split("\n")[0].slice(0, 50),
+        body,
+        mood: els.newMood.value,
+        tag: els.newTag.value.trim() || "solto",
+        favorite: false,
+        createdAt: now,
+        updatedAt: now
+      };
+
+      thoughts.unshift(thought);
+      activeId = thought.id;
+
+      els.newTitle.value = "";
+      els.newBody.value = "";
+      els.newTag.value = "";
+      els.newMood.value = "ideia";
+      els.search.value = "";
+      els.moodFilter.value = "todos";
+
+      persist();
+      render();
+      showToast("Pensamento guardado.");
+    }
+
+    function updateActive(field, value) {
+      if (!activeId) return;
+
+      thoughts = thoughts.map(t =>
+        t.id === activeId ? { ...t, [field]: value, updatedAt: new Date().toISOString() } : t
+      );
+
+      persist();
+      renderList();
+    }
+
+    function toggleFavorite() {
+      if (!activeId) return;
+
+      thoughts = thoughts.map(t =>
+        t.id === activeId ? { ...t, favorite: !t.favorite, updatedAt: new Date().toISOString() } : t
+      );
+
+      persist();
+      render();
+    }
+
+    function deleteThought() {
+      if (!activeId) return;
+
+      thoughts = thoughts.filter(t => t.id !== activeId);
+      const first = thoughts.find(t => t.module === activeModule);
+      activeId = first ? first.id : "";
+
+      persist();
+      render();
+    }
+
+    function render() {
+      const mod = modules[activeModule];
+      const count = thoughts.filter(t => t.module === activeModule).length;
+
+      els.total.textContent = `${thoughts.length} pensamentos`;
+      els.moduleEmoji.textContent = mod.emoji;
+      els.moduleTitle.textContent = mod.name;
+      els.moduleDescription.textContent = mod.description;
+      els.newModule.value = activeModule;
+      els.summary.textContent = `${count} guardado${count === 1 ? "" : "s"} nesta pagina`;
+
+      renderList();
+      renderEditor();
+    }
+
+    function renderList() {
+      const allInModule = thoughts.filter(t => t.module === activeModule);
+      const query = els.search.value.trim().toLowerCase();
+      const mood = els.moodFilter.value;
+
+      const filtered = allInModule
+        .filter(t => mood === "todos" || t.mood === mood)
+        .filter(t => !query || `${t.title} ${t.body} ${t.tag}`.toLowerCase().includes(query))
+        .sort((a, b) => Number(b.favorite) - Number(a.favorite) || b.updatedAt.localeCompare(a.updatedAt));
+
+      els.list.innerHTML = "";
+
+      if (filtered.length === 0) {
+        els.list.innerHTML = `<div class="empty">${allInModule.length ? "Tem coisa guardada aqui, mas o filtro atual escondeu." : "Nada guardado nesta pagina ainda."}</div>`;
+        return;
+      }
+
+      filtered.forEach(t => {
+        const item = document.createElement("button");
+        item.className = `item ${t.id === activeId ? "active" : ""}`;
+        item.innerHTML = `
+          <span class="item-top">
+            <strong>${escapeHtml(t.title)}</strong>
+            <span>${t.favorite ? "*" : "-"}</span>
+          </span>
+          <span class="preview">${escapeHtml(t.body)}</span>
+          <span class="meta">${escapeHtml(t.mood)} / ${escapeHtml(t.tag)}</span>
+        `;
+        item.addEventListener("click", () => {
+          activeId = t.id;
+          render();
+        });
+        els.list.appendChild(item);
+      });
+    }
+
+    function renderEditor() {
+      const active = thoughts.find(t => t.id === activeId && t.module === activeModule);
+
+      if (!active) {
+        els.editTitle.value = "";
+        els.editBody.value = "";
+        els.editTag.value = "";
+        els.editMood.value = "ideia";
+        els.favorite.disabled = true;
+        els.delete.disabled = true;
+        els.updatedAt.textContent = "Pagina vazia";
+        return;
+      }
+
+      els.editTitle.value = active.title;
+      els.editBody.value = active.body;
+      els.editMood.value = active.mood;
+      els.editTag.value = active.tag;
+      els.favorite.disabled = false;
+      els.delete.disabled = false;
+      els.favorite.textContent = active.favorite ? "Remover favorito" : "Favoritar";
+      els.updatedAt.textContent = `Atualizado ${new Date(active.updatedAt).toLocaleString("pt-BR")}`;
+    }
+
+    function persist() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(thoughts));
+    }
+
+    let toastTimer;
+    function showToast(text) {
+      clearTimeout(toastTimer);
+      els.toast.textContent = text;
+      els.toast.classList.add("show");
+      toastTimer = setTimeout(() => els.toast.classList.remove("show"), 2200);
+    }
+
+    function escapeHtml(text) {
+      return text
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    render();
+  </script>
+</body>
+</html>
