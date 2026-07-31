@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Pensamentos do Pepi",
+  title: "APPPFZTQEQSER",
   description: "Um app para o Pepi escrever, guardar e organizar tudo que pensa.",
   icons: {
     icon: "/favicon.svg",
