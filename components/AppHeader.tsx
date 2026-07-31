@@ -15,9 +15,7 @@ export function AppHeader({ thoughts }: AppHeaderProps) {
         <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[#68705d]">
           Cofre de pensamentos
         </p>
-        <h1 className="mt-2 text-4xl font-black leading-tight sm:text-5xl">
-          Pepi pensa, Pepi guarda.
-        </h1>
+        <h1 className="mt-2 text-4xl font-black leading-tight sm:text-5xl">APPPFZTQEQSER</h1>
       </div>
 
       <div className="grid grid-cols-3 gap-2">
